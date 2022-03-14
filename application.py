@@ -26,6 +26,7 @@ db = redis.Redis(os.environ["REDIS_HOST"], decode_responses=True)
 def main():
     return "핵심 쏙쏙 AWS"
 
+
 @application.route('/fileupload', methods=['POST'])
 def file_upload():
     file = request.files['file']
@@ -46,13 +47,13 @@ def file_upload():
     cursor.execute("insert into file(file_name) value('" + file.filename + "')")
     conn.commit()
 
-
     cursor.execute("SELECT count(*) from file")
     data = cursor.fetchone()
     conn.close()
     db.set("fileCount", data[0])
 
     return jsonify({'result': 'success'})
+
 
 @application.route('/files', methods=['GET'])
 def files():
@@ -62,11 +63,13 @@ def files():
     data = cursor.fetchall()
     conn.close()
 
-    return jsonify({'result': 'success', 'files':data})
+    return jsonify({'result': 'success', 'files': data})
+
 
 @application.route('/file/count', methods=['GET'])
 def file_count():
-    return jsonify({'result': 'success', 'count':db.get("fileCount")})
+    return jsonify({'result': 'success', 'count': db.get("fileCount")})
+
 
 if __name__ == '__main__':
     application.debug = True
